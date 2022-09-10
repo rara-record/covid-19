@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import styled from "@emotion/styled";
 import { Country } from "../types/type";
 
@@ -7,10 +7,21 @@ interface Props {
   onCountryClick: (country: Country) => void;
 }
 
+interface ListContentProps {
+  isActive: boolean;
+}
+
 const CountryItem: React.FC<Props> = ({ country, onCountryClick }) => {
+  const [isActive, setIsActive] = useState<boolean>(false);
+
+  const handleClickItem = (country: Country) => {
+    onCountryClick(country);
+    setIsActive((isActive) => !isActive);
+  };
+
   return (
-    <ListItem onClick={() => onCountryClick(country)}>
-      <ListContent>
+    <ListItem onClick={() => handleClickItem(country)}>
+      <ListContent isActive={isActive}>
         <div>
           <h3>{country.Country}</h3>
           <div>New Confirmed: {country.NewConfirmed}</div>
@@ -24,8 +35,9 @@ const CountryItem: React.FC<Props> = ({ country, onCountryClick }) => {
 
 export default CountryItem;
 
-const ListContent = styled.div`
-  background-color: #f7f7f7;
+const ListContent = styled.div<ListContentProps>`
+  background-color: ${(props) =>
+    props.isActive ? "rgba(30,28,157,0.23)" : "#f7f7f7"};
   margin: 5px;
   padding: 10px 0;
 `;
