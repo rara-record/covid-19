@@ -20,8 +20,19 @@ const App: React.FC = () => {
   }, []);
 
   const onCountryClick = (country: Country) => {
-    setActiveCountry([...activeCountry, country]);
-    console.log(activeCountry);
+    // 아이템 인덱스 구하기
+    const countryIndex = activeCountry.findIndex(
+      (aCountry) => aCountry.ID === country.ID
+    );
+
+    // 아이템이 있는 경우
+    if (countryIndex > -1) {
+      const newActiveCounties = [...activeCountry];
+      newActiveCounties.splice(countryIndex, 1); // 중복 제거
+      setActiveCountry(newActiveCounties);
+    } else {
+      setActiveCountry([...activeCountry, country]);
+    }
   };
 
   return (
@@ -35,8 +46,8 @@ const App: React.FC = () => {
         `}
       />
 
-      {activeCountry.map((aCountry) => (
-        <span>{aCountry.Country}</span>
+      {activeCountry.map((aCountry, index) => (
+        <span key={index}>{aCountry.Country}</span>
       ))}
 
       {data ? (
