@@ -1,39 +1,10 @@
 import React, { useState, useEffect } from "react";
+import { Global, css } from "@emotion/react";
+import GlobalInfo from "./componsnes/GlobalInfo";
+import CountryList from "./componsnes/CountryList";
+import { RespinseData } from "./types/type";
 
-interface Country {
-  Country: string;
-  CountryCode: string;
-  Date: string;
-  ID: string;
-  NewConfirmed: number;
-  NewDeaths: number;
-  NewRecovered: number;
-  Premium: unknown;
-  Slug: string;
-  TotalConfirmed: number;
-  TotalDeaths: number;
-  TotalRecovered: number;
-}
-
-interface GlobalData {
-  Date: string;
-  NewConfirmed: number;
-  NewDeaths: number;
-  NewRecovered: number;
-  TotalConfirmed: number;
-  TotalDeaths: number;
-  TotalRecovered: number;
-}
-
-interface RespinseData {
-  Countries: Country[];
-  Date: string;
-  Global: GlobalData;
-  ID: string;
-  Message: string;
-}
-
-const App: React.FunctionComponent = () => {
+const App: React.FC = () => {
   const [data, setData] = useState<RespinseData | undefined>(undefined);
 
   const fetchData = async () => {
@@ -47,7 +18,31 @@ const App: React.FunctionComponent = () => {
     fetchData();
   }, []);
 
-  return <div>App</div>;
+  return (
+    <div>
+      <Global
+        styles={css`
+          body {
+            background-color: #f1f1f1;
+            color: #222;
+          }
+        `}
+      />
+
+      {data ? (
+        <>
+          <GlobalInfo
+            newConfirmed={data?.Global.NewConfirmed}
+            newDeaths={data?.Global.NewDeaths}
+            newRecovered={data?.Global.NewRecovered}
+          />
+          <CountryList countries={data?.Countries} />
+        </>
+      ) : (
+        "Loading..."
+      )}
+    </div>
+  );
 };
 
 export default App;
