@@ -1,8 +1,11 @@
 import React, { useState, useEffect } from "react";
 import { Global, css } from "@emotion/react";
+
+import { RespinseData, Country } from "./types/type";
+
 import GlobalInfo from "./componsnes/GlobalInfo";
 import CountryList from "./componsnes/CountryList";
-import { RespinseData, Country } from "./types/type";
+import BarChart from "./componsnes/BarChart";
 
 const App: React.FC = () => {
   const [data, setData] = useState<RespinseData | undefined>(undefined);
@@ -12,7 +15,6 @@ const App: React.FC = () => {
     const result = await fetch("https://api.covid19api.com/summary");
     const data: RespinseData = await result.json();
     setData(data);
-    console.log(data);
   };
 
   useEffect(() => {
@@ -46,10 +48,6 @@ const App: React.FC = () => {
         `}
       />
 
-      {activeCountry.map((aCountry, index) => (
-        <span key={index}>{aCountry.Country}</span>
-      ))}
-
       {data ? (
         <>
           <GlobalInfo
@@ -57,8 +55,11 @@ const App: React.FC = () => {
             newDeaths={data?.Global.NewDeaths}
             newRecovered={data?.Global.NewRecovered}
           />
+          <hr />
+          {activeCountry.length ? <BarChart countries={activeCountry} /> : null}
+
           <CountryList
-            countries={data?.Countries}
+            countries={data.Countries}
             onCountryClick={onCountryClick}
           />
         </>
